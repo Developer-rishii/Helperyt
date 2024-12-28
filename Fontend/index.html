@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Code Entry</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        input {
+            padding: 10px;
+            width: 90%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enter Your Details</h1>
+        <input type="text" id="name" placeholder="Enter your name">
+        <input type="email" id="email" placeholder="Enter your email">
+        <input type="text" id="referralCode" placeholder="Enter referral code">
+        <button onclick="submitForm()">Submit</button>
+        <p id="message" class="message"></p>
+    </div>
+
+    <script>
+        async function submitForm() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const referralCode = document.getElementById('referralCode').value.trim();
+            const messageElement = document.getElementById('message');
+
+            if (!name || !email || !referralCode) {
+                messageElement.textContent = "All fields are required.";
+                messageElement.className = "message error";
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost:3000/submit", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ name, email, referralCode }),
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    messageElement.textContent = result.message;
+                    messageElement.className = "message success";
+                    const redirectUrl = "https://www.linkedin.com/company/helper-yt";
+                    setTimeout(() => {
+                    window.location.href = redirectUrl;
+                    }, 1000);
+                } else {
+                    throw new Error(result.error || "Unknown error occurred.");
+                }
+            } catch (error) {
+                messageElement.textContent = error.message;
+                messageElement.className = "message error";
+            }
+        }
+    </script>
+</body>
+</html>
