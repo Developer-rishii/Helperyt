@@ -6,3 +6,11 @@
     "mongoose": "^8.9.2"
   }
 }
+{
+  "name": "static-site",
+  "version": "1.0.0",
+  "description": "Static site deployment",
+  "scripts": {
+    "build": "echo 'No build step required!'"
+  }
+}
